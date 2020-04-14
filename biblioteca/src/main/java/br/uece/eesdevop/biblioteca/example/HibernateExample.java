@@ -1,9 +1,9 @@
-package br.uece.eesdevop.bancodedados.example;
-
-import br.uece.eesdevop.bancodedados.util.HibernateUtil;
+package br.uece.eesdevop.biblioteca.example;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+
+import br.uece.eesdevop.biblioteca.util.HibernateUtil;
 
 public class HibernateExample {
 

@@ -1,23 +1,19 @@
-package br.uece.eesdevop.bancodedados.servlet;
+package br.uece.eesdevop.biblioteca.servlet;
 
-import br.uece.eesdevop.bancodedados.model.BookEntity;
-import br.uece.eesdevop.bancodedados.util.HibernateUtil;
-import br.uece.eesdevop.util.Util;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import javax.persistence.Column;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
+
+import br.uece.eesdevop.biblioteca.model.BookEntity;
+import br.uece.eesdevop.biblioteca.util.HibernateUtil;
 
 @WebServlet("/")
 public class BookEntityServlet extends HttpServlet {
@@ -28,13 +24,12 @@ public class BookEntityServlet extends HttpServlet {
 	private static final long serialVersionUID = -2702031734148412609L;
 	
 	private EntityManager entityManager;
-    private Gson gson;
     
     private void pagina(PrintWriter writer, String requestURL, List<BookEntity> books) {
         writer.println("<html>" +
                 "<body>" +
                 "<h1>Livros</h1>" +
-                "<td><a href='"+requestURL+"book_save"+"'>Adicionar</a>  </td>"+
+                "<a href='"+requestURL+"book_save"+"'>Adicionar livro</a>"+
                 "<table border=\"1\">" + 
         		"    <tr>" + 
         		"        <td>Título</td>" + 
@@ -70,7 +65,6 @@ public class BookEntityServlet extends HttpServlet {
     @Override
     public void init() {
         entityManager = HibernateUtil.INSTANCE.getEntityManagerFactory().createEntityManager();
-        gson = new GsonBuilder().create();
     }
 
     @Override
@@ -112,21 +106,6 @@ public class BookEntityServlet extends HttpServlet {
     public void destroy() {
         if (entityManager != null && entityManager.isOpen()) {
             entityManager.close();
-        }
-    }
-
-    private static class BookRequest {
-
-        public final String title;
-        public final String author;
-        public final String abstracts;
-        public final Integer year;
-
-        public BookRequest(String title, String author, String abstracts, Integer year) {
-            this.title = title;
-            this.author = author;
-            this.abstracts = abstracts;
-            this.year = year;
         }
     }
 

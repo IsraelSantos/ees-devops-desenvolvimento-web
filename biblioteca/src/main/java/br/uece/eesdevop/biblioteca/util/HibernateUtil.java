@@ -1,4 +1,4 @@
-package br.uece.eesdevop.bancodedados.util;
+package br.uece.eesdevop.biblioteca.util;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;

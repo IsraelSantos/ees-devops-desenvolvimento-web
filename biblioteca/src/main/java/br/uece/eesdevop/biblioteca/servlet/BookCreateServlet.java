@@ -1,4 +1,4 @@
-package br.uece.eesdevop.bancodedados.servlet;
+package br.uece.eesdevop.biblioteca.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -28,18 +28,20 @@ public class BookCreateServlet extends HttpServlet {
         writer.println("<html>" +
                 "<body>" +
                 "<h1>Salvar Livro</h1>" +
-                "<td><a href='"+Util.urlLimpa(requestURL)+""+"'>Voltar</a>  </td>");
-        writer.println("<form method='post' action='"+Util.urlLimpa(requestURL)+"'>" + 
-        		"    Título: <input type='text' name='title' placeholder='Digite o título do livro'>" +
+                "<a href='"+Util.urlLimpa(requestURL)+""+"'>Voltar</a>");
+        writer.println("<div><form method='post' action='"+Util.urlLimpa(requestURL)+"'>" + 
+        		"</br>    Título: <input type='text' name='title' maxlength='255' placeholder='Digite o título do livro'>" +
+        		"</br></br>"+
+        		"    Autor: <input type='text' name='author' maxlength='255' placeholder='Digite o autor do livro'>" + 
+        		"</br></br>"+
+        		"    Resumo:"+ 
         		"</br>"+
-        		"    Autor: <input type='text' name='author' placeholder='Digite o autor do livro'>" + 
-        		"</br>"+
-        		"    Resumo: <textarea cols=60 rows='10' name='abstracts' maxlength='500' wrap='hard' placeholder='Digite o resumo do livro'></textarea>" + 
-        		"</br>"+
+        		" <textarea cols=60 rows='10' name='abstracts' maxlength='500' wrap='hard' placeholder='Digite o resumo do livro'></textarea>" + 
+        		"</br></br>"+
         		"    Ano: <input type='number' name='year' placeholder='Digite o autor do livro'>" + 
-        		"</br>"+
+        		"</br></br>"+
         		"    <input type='submit' name='enviar' value='Salvar'> " + 
-        		"</form>");
+        		"</form></div>");
         writer.println("</body>" +
                 "</html");
     }

@@ -1,4 +1,4 @@
-package br.uece.eesdevop.bancodedados.model;
+package br.uece.eesdevop.biblioteca.model;
 
 import javax.persistence.*;
 
