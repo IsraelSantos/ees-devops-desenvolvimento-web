@@ -23,5 +23,9 @@ dist/
 nbdist/
 .nb-gradle/
 
+### Eclipse ###
+target/
+bin/
+
 ## Java Files
 *.class
