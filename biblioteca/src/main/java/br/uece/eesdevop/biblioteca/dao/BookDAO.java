@@ -22,7 +22,7 @@ public class BookDAO {
 		List<BookEntity> res = new ArrayList<BookEntity>();
         
         if (entityManager != null && entityManager.isOpen()) {
-            res = entityManager.createQuery("select b from BookEntity b order by b.id", BookEntity.class).getResultList();
+            res = entityManager.createQuery("select b from BookEntity b order by b.id ", BookEntity.class).getResultList();
         }
         
         return res;
