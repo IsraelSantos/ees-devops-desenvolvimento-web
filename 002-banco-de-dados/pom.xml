@@ -42,7 +42,7 @@
     </dependencies>
 
     <build>
-        <finalName>banco-de-dados</finalName>
+        <finalName>biblioteca</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

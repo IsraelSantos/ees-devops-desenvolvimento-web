@@ -7,6 +7,7 @@ import br.uece.eesdevop.util.Util;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import javax.persistence.Column;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.servlet.annotation.WebServlet;
@@ -18,7 +19,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet("/book_entities")
+@WebServlet("/")
 public class BookEntityServlet extends HttpServlet {
 
     /**
@@ -28,28 +29,12 @@ public class BookEntityServlet extends HttpServlet {
 	
 	private EntityManager entityManager;
     private Gson gson;
-
-    @Override
-    public void init() {
-        entityManager = HibernateUtil.INSTANCE.getEntityManagerFactory().createEntityManager();
-        gson = new GsonBuilder().create();
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        resp.setContentType("text/html");
-        List<BookEntity> books = new ArrayList<>();
-        String requestURL = req.getRequestURL().toString();
-        
-        if (entityManager != null && entityManager.isOpen()) {
-            books = entityManager.createQuery("select b from BookEntity b", BookEntity.class).getResultList();
-        }
-
-        PrintWriter writer = resp.getWriter();
+    
+    private void pagina(PrintWriter writer, String requestURL, List<BookEntity> books) {
         writer.println("<html>" +
                 "<body>" +
                 "<h1>Livros</h1>" +
-                "<td><a href='"+Util.urlLimpa(requestURL)+""+"'>Adicionar</a>  </td>"+
+                "<td><a href='"+requestURL+"book_save"+"'>Adicionar</a>  </td>"+
                 "<table border=\"1\">" + 
         		"    <tr>" + 
         		"        <td>Título</td>" + 
@@ -69,19 +54,45 @@ public class BookEntityServlet extends HttpServlet {
         		"</body>" +
                 "</html");
     }
+    
+    private void listaLivros(HttpServletRequest req, HttpServletResponse resp) throws IOException{
+        List<BookEntity> books = new ArrayList<>();
+        String requestURL = req.getRequestURL().toString();
+        
+        if (entityManager != null && entityManager.isOpen()) {
+            books = entityManager.createQuery("select b from BookEntity b", BookEntity.class).getResultList();
+        }
+
+        PrintWriter writer = resp.getWriter();
+        pagina(writer, requestURL, books);
+    }
+
+    @Override
+    public void init() {
+        entityManager = HibernateUtil.INSTANCE.getEntityManagerFactory().createEntityManager();
+        gson = new GsonBuilder().create();
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        resp.setContentType("text/html");
+        listaLivros(req, resp);
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        BookRequest request = gson.fromJson(req.getReader(), BookRequest.class);
-
+    	resp.setContentType("text/html");
+    	BookEntity entity = new BookEntity();
+        entity.setTitle(req.getParameter("title"));
+        entity.setAuthor(req.getParameter("author"));
+        entity.setAbstracts(req.getParameter("abstracts"));
+        entity.setYear(Integer.parseInt(req.getParameter("year")));
+        
         if (entityManager != null && entityManager.isOpen()) {
             EntityTransaction transaction = entityManager.getTransaction();
 
             try {
                 transaction.begin();
-                BookEntity entity = new BookEntity();
-                entity.setTitle(request.title);
-                entity.setAuthor(request.author);
                 entityManager.persist(entity);
                 entityManager.flush();
                 transaction.commit();
@@ -91,6 +102,8 @@ public class BookEntityServlet extends HttpServlet {
                 }
                 throw new RuntimeException("Unable to save the new book: " + e.getMessage());
             }
+            
+            listaLivros(req, resp);
 
         }
     }
@@ -106,10 +119,14 @@ public class BookEntityServlet extends HttpServlet {
 
         public final String title;
         public final String author;
+        public final String abstracts;
+        public final Integer year;
 
-        public BookRequest(String title, String author) {
+        public BookRequest(String title, String author, String abstracts, Integer year) {
             this.title = title;
             this.author = author;
+            this.abstracts = abstracts;
+            this.year = year;
         }
     }
 
