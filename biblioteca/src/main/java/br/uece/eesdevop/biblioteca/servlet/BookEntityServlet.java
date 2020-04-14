@@ -41,7 +41,9 @@ public class BookEntityServlet extends HttpServlet {
             				"	<td>"+book.getAuthor()+"</td>"+
             				"	<td>"+book.getAbstracts()+"</td>"+
             				"	<td>"+book.getYear()+"</td>"+
-            		        "   <td><a href='"+requestURL+"book_save?id="+book.getId()+"'>Editar</a></td>" 
+            		        "   <td><a href='"+requestURL+"book_save?id="+book.getId()+"'>Editar</a> "+
+            		        "<a href='"+requestURL+"?id="+book.getId()+"&acao=excluir"+"'>Excluir</a>"+		
+            		         "</td>" 
             				+ "</tr>");
         }
         writer.println("</table>"+
@@ -65,6 +67,17 @@ public class BookEntityServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("text/html");
+        String sId = req.getParameter("id");
+        String sAcao = req.getParameter("acao");
+        
+        if (sId != null && sAcao != null && !sId.equalsIgnoreCase("") && !sAcao.equalsIgnoreCase("")) {
+        	if(sAcao.equalsIgnoreCase("excluir")) {
+        	    Long id = (sId != null && sId != "")? Long.parseLong(sId): null;
+        	        
+        	    bookDAO.remove(id);
+        	}
+        }
+
         listaLivros(req, resp);
     }
 
@@ -87,17 +100,6 @@ public class BookEntityServlet extends HttpServlet {
 
     }
     
-    @Override
-    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-    	resp.setContentType("text/html");
-        String sId = req.getParameter("id");
-        
-        Long id = (sId != null && sId != "")? Long.parseLong(sId): null;
-        
-        bookDAO.remove(id);
-        
-        listaLivros(req, resp);
-    }
 
     @Override
     public void destroy() {
